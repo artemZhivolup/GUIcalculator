@@ -1,15 +1,17 @@
 package ua.zhivolup.guicalculator.ui;
 
-import javax.imageio.plugins.jpeg.JPEGHuffmanTable;
 import javax.swing.*;
 import java.awt.*;
 
 public class CalcFrame{
 
-    JFrame frame = new JFrame();
-    JScrollPane scrollPane;
-    JTextArea display;
-    JTextField textField;
+    private JFrame frame = new JFrame();
+    private JScrollPane scrollPane;
+    private JTextArea display;
+    private JTextField textField;
+    private NumderButtonsActionListener numderButtonsActionListener = new NumderButtonsActionListener(this);
+    private OperationsButtonActionListener operationsButtonActionListener = new OperationsButtonActionListener(this);
+    private ResultButtonActionListener resultButtonActionListener = new ResultButtonActionListener(this);
 
     public CalcFrame(){
         frame.setBounds(400, 400, 350, 320);
@@ -22,20 +24,26 @@ public class CalcFrame{
         frame.setVisible(true);
     }
 
-    public JTextArea display(){
+    public JTextArea getDisplay() {
+        return display;
+    }
+
+    public JTextField getTextField() {
+        return textField;
+    }
+
+    public JFrame getFrame() {
+        return frame;
+    }
+
+    private JTextArea display(){
         display = new JTextArea(5, 23);
         display.setEditable(false);
         display.setLineWrap(true);
         return display;
     }
 
-    /*public JScrollPane scrollPane(){
-        scrollPane = new JScrollPane(display(), JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.setVerticalScrollBarPolicy (ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        return scrollPane;
-    }*/
-
-    public JPanel scrollPanePanel(){
+    private JPanel scrollPanePanel(){
         JPanel scrollPanePanel = new JPanel(new GridLayout(1, 1, 2, 2));
         scrollPane = new JScrollPane(display(), JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy (ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -43,21 +51,21 @@ public class CalcFrame{
         return scrollPanePanel;
     }
 
-    public JPanel textFieldPanel(){
+    private JPanel textFieldPanel(){
         JPanel textFieldPanel = new JPanel(new GridLayout(1, 1, 2, 2));
         textField = new JTextField(23);
         textFieldPanel.add(textField);
         return textFieldPanel;
     }
 
-    public JPanel textPanel(){
+    private JPanel textPanel(){
         JPanel textPanel = new JPanel(new BorderLayout());
         textPanel.add(scrollPanePanel(), BorderLayout.PAGE_START);
         textPanel.add(textFieldPanel(), BorderLayout.PAGE_END);
         return textPanel;
     }
 
-    public JPanel buttonPanel(){
+    private JPanel buttonPanel(){
         JPanel buttonPanel = new JPanel(new GridLayout(4, 4, 2, 2));
 
         JButton button0 = new JButton("0");
@@ -77,40 +85,29 @@ public class CalcFrame{
         JButton buttonStart = new JButton("=");
         JButton buttonDelim = new JButton(".");
 
-        buttonPanel.add(button7);
-        buttonPanel.add(button8);
-        buttonPanel.add(button9);
-        buttonPanel.add(buttonSum);
-        buttonPanel.add(button4);
-        buttonPanel.add(button5);
-        buttonPanel.add(button6);
-        buttonPanel.add(buttonSub);
-        buttonPanel.add(button1);
-        buttonPanel.add(button2);
-        buttonPanel.add(button3);
-        buttonPanel.add(buttonDivide);
-        buttonPanel.add(buttonDelim);
-        buttonPanel.add(button0);
-        buttonPanel.add(buttonStart);
-        buttonPanel.add(buttonMul);
+        JButton[] firstLine = {button7, button8, button9, buttonSum, button4, button5, button6, buttonSub,
+                button1, button2, button3, buttonDivide, buttonDelim, button0, buttonStart, buttonMul};
+        for (JButton button : firstLine) {
+            buttonPanel.add(button);
+        }
 
         JButton[] numberedButtonArray = {button0, button1, button2, button3, button4, button5, button6, button7,
                 button8, button9, buttonDelim};
         for (JButton button : numberedButtonArray){
-            button.addActionListener(new NumderButtonsActionListener(this));
+            button.addActionListener(numderButtonsActionListener);
         }
 
         JButton[] operationButtonArray = {buttonSum, buttonSub, buttonDivide, buttonMul};
         for (JButton button : operationButtonArray){
-            button.addActionListener(new OperationsButtonActionListener(this));
+            button.addActionListener(operationsButtonActionListener);
         }
 
-        buttonStart.addActionListener(new ResultButtonActionListener(this));
+        buttonStart.addActionListener(resultButtonActionListener);
 
         return buttonPanel;
     }
 
-    public JPanel cleanButtonPanel(){
+    private JPanel cleanButtonPanel(){
         JPanel clearButtonPanel = new JPanel(new GridLayout(1, 1, 2, 2));
 
         JButton clearButton = new JButton("C");
